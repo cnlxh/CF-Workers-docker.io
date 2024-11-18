@@ -11,24 +11,27 @@ let 屏蔽爬虫UA = ['netcraft'];
 
 // 根据主机名选择对应的上游地址
 function routeByHosts(host) {
-	// 定义路由表
-	const routes = {
-		// 生产环境
-		"quay": "quay.io",
-		"gcr": "gcr.io",
-		"k8s-gcr": "k8s.gcr.io",
-		"k8s": "registry.k8s.io",
-		"ghcr": "ghcr.io",
-		"cloudsmith": "docker.cloudsmith.io",
-		"nvcr": "nvcr.io",
-		
-		// 测试环境
-		"test": "registry-1.docker.io",
-	};
+    // 定义路由表
+    const routes = {
+        // 生产环境
+        "quay": "quay.io",
+        "gcr": "gcr.io",
+        "k8s": "registry.k8s.io",
+        "ghcr": "ghcr.io",
+        
+        // 测试环境
+        "test": "registry-1.docker.io",
+    };
 
-	if (host in routes) return [ routes[host], false ];
-	else return [ hub_host, true ];
+    for (let key in routes) {
+        if (host.includes(key)) {
+            return [routes[key], false];
+        }
+    }
+
+    return [hub_host, true];
 }
+
 
 /** @type {RequestInit} */
 const PREFLIGHT_INIT = {
